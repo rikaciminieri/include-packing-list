@@ -1,9 +1,13 @@
+import cx from "classnames";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const initialInputState = {
+    id: uuidv4(),
     item: "",
-    quantity: 0,
+    quantity: 1,
+    isPacked: false,
   };
   const [userInput, setUserInput] = useState(initialInputState);
 
@@ -16,8 +20,6 @@ export default function Home() {
       ...userInput,
       [event.target.name]: event.target.value,
     });
-
-    console.log(userInput);
   };
 
   const handleSubmit = (event) => {
@@ -26,6 +28,25 @@ export default function Home() {
     setPackingList([userInput, ...packingList]);
 
     setUserInput(initialInputState);
+  };
+
+  const handleToggle = (id) => {
+    const mapped = packingList.map((listItem) => {
+      if (listItem.id === id) {
+        return {
+          ...listItem,
+          isPacked: !listItem.isPacked,
+        };
+      }
+      return listItem;
+      // listItem.id === id
+      //   ? {
+      //       ...listItem,
+      //       isPacked: !listItem.isPacked,
+      //     }
+      //   : listItem;
+    });
+    setPackingList(mapped);
   };
 
   return (
@@ -52,12 +73,18 @@ export default function Home() {
       </form>
       <ul>
         {packingList.length >= 1
-          ? packingList.map((todo, idx) => {
+          ? packingList.map(({ item, id, quantity, isPacked }) => {
               return (
-                <li key={idx}>
-                  <input type="checkbox" />
-                  {todo.quantity} {todo.item}{" "}
-                </li>
+                <div key={id} className={cx("item", { isPacked })}>
+                  <input
+                    type="checkbox"
+                    defaultChecked={isPacked}
+                    onClick={() => handleToggle(id)}
+                  />
+                  <li>
+                    {quantity} {item}
+                  </li>
+                </div>
               );
             })
           : "Add an item and start packing!"}
