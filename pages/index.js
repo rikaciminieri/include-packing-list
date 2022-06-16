@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
@@ -49,6 +49,16 @@ export default function Home() {
     setPackingList(mapped);
   };
 
+  const handleDelete = (id) => {
+    const updatedPackingList = packingList.filter((listItem) => {
+      return listItem.id !== id;
+    });
+
+    setPackingList(updatedPackingList);
+  };
+
+  const editListItem = (id) => {};
+
   return (
     <div>
       <h3>Travel Must-Haves</h3>
@@ -73,21 +83,56 @@ export default function Home() {
       </form>
       <ul>
         {packingList.length >= 1
-          ? packingList.map(({ item, id, quantity, isPacked }) => {
-              return (
-                <div key={id} className={cx("item", { isPacked })}>
-                  <input
-                    type="checkbox"
-                    defaultChecked={isPacked}
-                    onClick={() => handleToggle(id)}
-                  />
-                  <li>
-                    {quantity} {item}
-                  </li>
-                </div>
-              );
-            })
+          ? packingList
+              .filter(({ isPacked }) => !isPacked)
+              .map(({ item, id, quantity, isPacked }) => {
+                return (
+                  <div key={id} className={cx("item", { isPacked })}>
+                    <input
+                      type="checkbox"
+                      defaultChecked={isPacked}
+                      onClick={() => handleToggle(id)}
+                    />
+                    <li>
+                      {quantity} {item}
+                    </li>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDelete(id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                );
+              })
           : "Add an item and start packing!"}
+
+        {packingList
+          .filter(({ isPacked }) => isPacked)
+          .map(({ item, id, quantity, isPacked }) => {
+            return (
+              <div key={id} className={cx("item", { isPacked })}>
+                <input
+                  type="checkbox"
+                  defaultChecked={isPacked}
+                  onClick={() => handleToggle(id)}
+                />
+                <li>
+                  {quantity} {item}
+                </li>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDelete(id);
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          })}
       </ul>
     </div>
   );
