@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
@@ -9,9 +9,12 @@ export default function Home() {
     quantity: 1,
     isPacked: false,
   };
-  const [userInput, setUserInput] = useState(initialInputState);
 
+  const [userInput, setUserInput] = useState(initialInputState);
   const [packingList, setPackingList] = useState([]);
+  // Value will be id we are editing
+  const [itemEditing, setItemEditing] = useState(null);
+  const [editingText, setEditingText] = useState({});
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -32,19 +35,12 @@ export default function Home() {
 
   const handleToggle = (id) => {
     const mapped = packingList.map((listItem) => {
-      if (listItem.id === id) {
-        return {
-          ...listItem,
-          isPacked: !listItem.isPacked,
-        };
-      }
-      return listItem;
-      // listItem.id === id
-      //   ? {
-      //       ...listItem,
-      //       isPacked: !listItem.isPacked,
-      //     }
-      //   : listItem;
+      return listItem.id === id
+        ? {
+            ...listItem,
+            isPacked: !listItem.isPacked,
+          }
+        : listItem;
     });
     setPackingList(mapped);
   };
@@ -57,7 +53,23 @@ export default function Home() {
     setPackingList(updatedPackingList);
   };
 
-  const editListItem = (id) => {};
+  const handleEditingChange = (event) => {
+    event.preventDefault();
+
+    setEditingText({
+      ...editingText,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const editListItem = (id) => {
+    const updatedPackingList = packingList.map((listItem) => {
+      return listItem.id === id ? (listItem.item = editingText) : listItem;
+    });
+    setPackingList(updatedPackingList);
+    setItemEditing(null);
+    setEditingText("");
+  };
 
   return (
     <div>
@@ -93,9 +105,33 @@ export default function Home() {
                       defaultChecked={isPacked}
                       onClick={() => handleToggle(id)}
                     />
-                    <li>
-                      {quantity} {item}
-                    </li>
+                    {id === itemEditing ? (
+                      <div>
+                        <input
+                          type="text"
+                          onChange={handleEditingChange}
+                          value={editingText.item}
+                          name="item"
+                        />
+                        <input
+                          type="number"
+                          onChange={handleEditingChange}
+                          value={editingText.quantity}
+                          name="quantity"
+                        />
+                      </div>
+                    ) : (
+                      <li>
+                        {quantity} {item}
+                      </li>
+                    )}
+
+                    {itemEditing === id ? (
+                      <button onClick={() => editListItem(id)}>Done</button>
+                    ) : (
+                      <button onClick={() => setItemEditing(id)}>Edit</button>
+                    )}
+
                     <button
                       onClick={(e) => {
                         e.preventDefault();
@@ -122,6 +158,7 @@ export default function Home() {
                 <li>
                   {quantity} {item}
                 </li>
+                <button>Edit</button>
                 <button
                   onClick={(e) => {
                     e.preventDefault();
