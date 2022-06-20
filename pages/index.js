@@ -1,33 +1,17 @@
-import cx from "classnames";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import PackingForm from "../components/PackingForm";
+import PackingList from "../components/PackingList";
 
 export default function Home() {
 
   const [packingList, setPackingList] = useState([]);
-  const [editingText, setEditingText] = useState({});
-
-  const handleEditingChange = (event) => {
-    event.preventDefault();
-
-    setEditingText({
-      ...editingText,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const editListItem = (id) => {
-    const updatedPackingList = packingList.map((listItem) => {
-      return listItem.id === id ? (listItem.item = editingText) : listItem;
-    });
-    setPackingList(updatedPackingList);
-    setItemEditing(null);
-    setEditingText("");
-  };
 
   return (
-    <div>
-      <h3>Travel Must-Haves</h3>
+    <div className="w-3/4 mx-auto text-center">
+      <h3 className="text-4xl pt-12">Travel Must Haves</h3>
+      <PackingForm packingList={packingList} setPackingList={setPackingList} />
+      <h2 className="pt-10 py-5 font-semibold">My List</h2>
+      <PackingList packingList={packingList} setPackingList={setPackingList} />
     </div>
   );
 }
