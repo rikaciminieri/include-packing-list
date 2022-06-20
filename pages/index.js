@@ -3,35 +3,11 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
-  const initialInputState = {
-    id: uuidv4(),
-    item: "",
-    quantity: 1,
-    isPacked: false,
-  };
 
-  const [userInput, setUserInput] = useState(initialInputState);
   const [packingList, setPackingList] = useState([]);
   // Value will be id we are editing
   const [itemEditing, setItemEditing] = useState(null);
   const [editingText, setEditingText] = useState({});
-
-  const handleChange = (event) => {
-    event.preventDefault();
-
-    setUserInput({
-      ...userInput,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    setPackingList([userInput, ...packingList]);
-
-    setUserInput(initialInputState);
-  };
 
   const handleToggle = (id) => {
     const mapped = packingList.map((listItem) => {
@@ -74,25 +50,6 @@ export default function Home() {
   return (
     <div>
       <h3>Travel Must-Haves</h3>
-      <form>
-        <input
-          type="text"
-          placeholder="Type an item"
-          onChange={handleChange}
-          name="item"
-          value={userInput.item}
-        />
-        <input
-          type="number"
-          placeholder="Quantity"
-          onChange={handleChange}
-          name="quantity"
-          value={userInput.quantity}
-        />
-        <button type="submit" onClick={handleSubmit}>
-          Add
-        </button>
-      </form>
       <ul>
         {packingList.length >= 1
           ? packingList
