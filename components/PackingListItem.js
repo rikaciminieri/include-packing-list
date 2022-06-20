@@ -1,3 +1,4 @@
+import cx from "classnames";
 import Button from "./UI/Button";
 
 const PackingListItem = ({
@@ -32,6 +33,10 @@ const PackingListItem = ({
           defaultChecked={isPacked}
           onClick={() => handleToggle()}
         />
+        <p className={cx({ "line-through": isPacked })}>
+          <span>{quantity}</span>
+          <span> {item} </span>
+        </p>
 
         <Button onClick={() => setItemEditingID(id)}>Edit</Button>
 
