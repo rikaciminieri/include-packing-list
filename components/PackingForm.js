@@ -15,7 +15,6 @@ const initialFormErrors = {
 const PackingForm = ({ packingList, setPackingList }) => {
   const [userInput, setUserInput] = useState(initialInputState);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
-  const [isSubmit, setIsSubmit] = useState(false);
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -26,6 +25,8 @@ const PackingForm = ({ packingList, setPackingList }) => {
     });
   };
 
+  // This function validates each user input field and stores error messages so they can be set
+  // in state once the user submits their item
   const validate = (values) => {
     const errors = {};
     if (!values.item) {
@@ -37,13 +38,15 @@ const PackingForm = ({ packingList, setPackingList }) => {
     return errors;
   };
 
+  // Validates inputs. On change of formErrors, useEffect below will run.
   const handleSubmit = (event) => {
     event.preventDefault();
     setFormErrors(validate(userInput));
-    setIsSubmit(true);
-    
   };
 
+  // When user inputs are valid and the user has submit the form, a new item will
+  // be added to the packing list. This function is dependent on changes in the form
+  // errors to ensure that only once inputs are validated can the item be added.
   useEffect(() => {
     const newPackingListItem = {
       id: uuidv4(),
@@ -51,8 +54,8 @@ const PackingForm = ({ packingList, setPackingList }) => {
       quantity: userInput.quantity,
       isPacked: false,
     };
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      setPackingList([newPackingListItem, ...packingList])
+    if (Object.keys(formErrors).length === 0) {
+      setPackingList([newPackingListItem, ...packingList]);
       setUserInput(initialInputState);
     }
   }, [formErrors]);
@@ -60,7 +63,9 @@ const PackingForm = ({ packingList, setPackingList }) => {
   return (
     <form className="pt-12 flex flex-col items-center">
       <p className="text-red-500">{formErrors.item}</p>
-      <label htmlFor="item" className="p-3">Item:</label>
+      <label htmlFor="item" className="p-3">
+        Item:
+      </label>
       <input
         className="border-2 border-slate-300 rounded p-2"
         type="text"
@@ -70,7 +75,9 @@ const PackingForm = ({ packingList, setPackingList }) => {
         value={userInput.item}
       />
       <p className="text-red-500">{formErrors.quantity}</p>
-      <label htmlFor="quantity" className="p-3">Quantity:</label>
+      <label htmlFor="quantity" className="p-3">
+        Quantity:
+      </label>
       <input
         className="border-2 border-slate-300 rounded p-2"
         type="number"

@@ -3,9 +3,11 @@ import PackingListItem from "./PackingListItem";
 import { useState } from "react";
 
 const PackingList = ({ packingList, setPackingList }) => {
-  // Value will be id being edited
+  // Value will be id of item being edited
   const [itemEditingID, setItemEditingID] = useState(null);
 
+  // Descriptive variables declared in the beginning makes code easier for me to read and understand.
+  // If I need to add to the code later, this saves tons of time!
   const packedItems = packingList.filter((item) => item.isPacked);
   const unpackedItems = packingList.filter((item) => !item.isPacked);
 
@@ -26,10 +28,16 @@ const PackingList = ({ packingList, setPackingList }) => {
         <p>Add an item and start packing!</p>
       ) : (
         // 2 separate lists are being rendered - Unpacked items will be at the top of the list,
-        // while packed items will move to the bottom so it is easier to see what still needs to be packed
+        // while packed items will move to the bottom. Although duplicate code exists, I think the user
+        // benefits from being able to see which items still need to be packed.
+
+        // There is some prop drilling happening here - in the case of a larger project,
+        // I'd use a state management library to avoid this.
         <ul>
           {unpackedItems.map(({ item, id, quantity, isPacked }) => {
-            // If the item is being edited, render the editing state, otherwise render the list
+            // If the item is being edited, render the editing state, otherwise render the packing list
+            // Separating the editing state and list state into two different components makes the code more
+            // modular and easy to follow.
             return itemBeingEdited?.id === id ? (
               <EditingListItem
                 key={id}

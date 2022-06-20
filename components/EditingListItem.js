@@ -9,6 +9,9 @@ const EditingListItem = ({
   packingList,
   itemBeingEdited,
 }) => {
+  // Setting the initial state to the item that is being edited allows for the input fields to
+  // populate with the initial user input. User can fix any input errors they might have made initially
+  // without losing their original item.
   const [editUserInput, setEditUserInput] = useState(itemBeingEdited);
 
   const handleEditingChange = (event) => {

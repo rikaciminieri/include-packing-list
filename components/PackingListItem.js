@@ -11,7 +11,6 @@ const PackingListItem = ({
   isPacked,
   setPackingList,
 }) => {
-  
   const handleToggle = () => {
     const mapped = packingList.map((listItem) => {
       return listItem.id === id
@@ -33,6 +32,9 @@ const PackingListItem = ({
           defaultChecked={isPacked}
           onClick={() => handleToggle()}
         />
+        {/* Used 'classnames' library to conditionally style item based on packed state.*/}
+        {/* I stumbled across this library and wanted to incorporate it in this project */}
+        {/* Strikethrough makes it easy for users to distinguish what still needs to be packed */}
         <p className={cx({ "line-through": isPacked })}>
           <span>{quantity}</span>
           <span> {item} </span>
