@@ -7,18 +7,6 @@ export default function Home() {
   const [packingList, setPackingList] = useState([]);
   const [editingText, setEditingText] = useState({});
 
-  const handleToggle = (id) => {
-    const mapped = packingList.map((listItem) => {
-      return listItem.id === id
-        ? {
-            ...listItem,
-            isPacked: !listItem.isPacked,
-          }
-        : listItem;
-    });
-    setPackingList(mapped);
-  };
-
   const handleEditingChange = (event) => {
     event.preventDefault();
 
